@@ -8,6 +8,8 @@ group = 'org.mvplugins.multiverse.core'
 description = 'Multiverse-Core'
 
 repositories {
+    mavenLocal()
+    maven { url "https://maven.aliyun.com/nexus/content/groups/public/" }
     maven {
         name = 'aikar repo'
         url = uri('https://repo.aikar.co/content/groups/aikar/')
@@ -22,6 +24,7 @@ repositories {
         name = "helpchatRepoReleases"
         url = uri("https://repo.helpch.at/releases/")
     }
+    mavenCentral()
 }
 
 configure(apiDependencies) {
@@ -63,12 +66,6 @@ dependencies {
     shadowed 'net.minidev:json-smart:2.5.2'
     shadowed 'org.jetbrains:annotations:26.0.2'
     shadowed 'io.papermc:paperlib:1.0.8'
-
-    // Tests
-    testImplementation('com.googlecode.json-simple:json-simple:1.1.1') {
-        exclude group: 'junit', module: 'junit'
-    }
-    testImplementation("org.hamcrest:hamcrest:3.0")
 }
 
 ext.bitlyAccessToken = System.getenv('BITLY_ACCESS_TOKEN') ?: 'bitly-access-token'
@@ -101,17 +98,4 @@ shadowJar {
     relocate 'org.intellij', 'org.mvplugins.multiverse.external.intellij'
     relocate 'org.jetbrains', 'org.mvplugins.multiverse.external.jetbrains'
     relocate 'io.papermc.lib', 'org.mvplugins.multiverse.external.paperlib'
-}
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/Multiverse/Multiverse-Core"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
 }

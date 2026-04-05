@@ -98,12 +98,11 @@ final class PlaceholderExpansionHook extends PlaceholderExpansion {
         final var placeholder = paramsArray.remove(0).toLowerCase(Locale.ENGLISH);
 
         return parseWorldName(offlinePlayer, paramsArray)
-                .flatMap(worldName -> worldManager.getWorld(worldName)
-                    .onEmpty(() -> warning("Multiverse World not found: " + worldName)))
+                .flatMap(worldManager::getWorld)
                 .flatMap(world -> world.asLoadedWorld()
                         .flatMap(loadedWorld -> getLoadedWorldPlaceHolderValue(placeholder, paramsArray, loadedWorld))
                         .orElse(() -> getWorldPlaceHolderValue(placeholder, paramsArray, world)))
-                .getOrElse(() -> coreConfig.getInvalidPapiFormatReturnsBlank() ? "" : null);
+                .getOrElse(() -> "未知世界");
     }
 
     private @NotNull Option<String> parseWorldName(OfflinePlayer offlinePlayer, List<String> paramsArray) {
@@ -128,7 +127,6 @@ final class PlaceholderExpansionHook extends PlaceholderExpansion {
         if (offlinePlayer instanceof Player player) {
             return Option.of(player.getWorld().getName());
         }
-        warning("Multiverse World not found: " + paramWorldName);
         return Option.none();
     }
 
